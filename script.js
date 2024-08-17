@@ -1,6 +1,2 @@
-function hamburg(){
-     
-//it seems to be working dude;
-
-}
-
+alert("this is working");
+function hamburg() {}

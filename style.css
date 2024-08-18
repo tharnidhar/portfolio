@@ -42,6 +42,11 @@ nav {
     0px 30px rgb(25, 0, 255);
 }
 
+.logo_big {
+  width: 26px;
+  height: 26px;
+}
+
 .hamburg,
 .cancel {
   cursor: pointer;

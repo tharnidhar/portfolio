@@ -195,7 +195,7 @@ section {
   height: 500px;
   border-radius: 100%;
   overflow: hidden;
-  box-shadow: 0 0 50px rgb(12, 158, 255);
+  box-shadow: 0 0 100px rgba(251, 171, 0, 0.705);
 }
 .main_container .image img {
   width: 100%;

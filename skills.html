@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" href="logo1.png" type="image/png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Tharnidhar | Skills</title>
+  <style>
+    /* ── Page transition overlay ── */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 9999;
+      transform: translateY(0);
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+      pointer-events: none;
+    }
+
+    .page-transition-overlay.reveal {
+      transform: translateY(-100%);
+    }
+
+    /* ── Skills section layout ── */
+    body {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .skills-section {
+      width: 100%;
+      min-height: 90vh;
+      padding: 40px 8%;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+    }
+
+    .skills-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .skills-section .section-title {
+      font-size: clamp(1.6rem, 1rem + 3vw, 2.8rem);
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .skills-section .section-title span {
+      background: linear-gradient(270deg, rgb(12, 158, 255), rgb(255, 255, 255));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .skills-section .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, rgb(12, 158, 255), transparent);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── Skills grid ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .skill-card {
+      background: linear-gradient(145deg, rgba(12, 158, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(12, 158, 255, 0.15);
+      border-radius: 16px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .skill-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .skill-card:hover {
+      border-color: rgba(12, 158, 255, 0.5);
+      box-shadow: 0 0 30px rgba(12, 158, 255, 0.1), inset 0 0 30px rgba(12, 158, 255, 0.03);
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(12, 158, 255, 0.04), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .skill-card:hover::before {
+      left: 100%;
+    }
+
+    .skill-card .card-icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(12, 158, 255, 0.15), rgba(12, 158, 255, 0.05));
+      color: rgb(12, 158, 255);
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+      border: 1px solid rgba(12, 158, 255, 0.2);
+    }
+
+    .skill-card h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      padding: 8px 16px;
+      background: rgba(12, 158, 255, 0.08);
+      border: 1px solid rgba(12, 158, 255, 0.2);
+      border-radius: 20px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      cursor: default;
+    }
+
+    .skill-tag:hover {
+      background: rgba(12, 158, 255, 0.2);
+      border-color: rgba(12, 158, 255, 0.5);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(12, 158, 255, 0.15);
+    }
+
+    /* ── Certifications section ── */
+    .certifications-section {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding: 0 8% 60px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .certifications-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cert-title {
+      font-size: clamp(1.2rem, 1rem + 2vw, 1.8rem);
+      font-weight: 600;
+      color: white;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .cert-title span {
+      background: linear-gradient(270deg, rgb(12, 158, 255), rgb(255, 255, 255));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .cert-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 22px;
+      background: linear-gradient(145deg, rgba(12, 158, 255, 0.04), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(12, 158, 255, 0.1);
+      border-radius: 12px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cert-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .cert-item:hover {
+      border-color: rgba(12, 158, 255, 0.4);
+      box-shadow: 0 0 20px rgba(12, 158, 255, 0.08);
+    }
+
+    .cert-item i {
+      color: rgb(12, 158, 255);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .cert-item .cert-text {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    .cert-item .cert-text strong {
+      color: white;
+      font-weight: 600;
+    }
+
+    /* ── Back button ── */
+    .back-home {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 50px;
+    }
+
+    .back-home a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 30px;
+      background: transparent;
+      border: 2px solid rgb(12, 158, 255);
+      border-radius: 8px;
+      color: rgb(12, 158, 255);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-home a:hover {
+      background: rgb(12, 158, 255);
+      color: black;
+      box-shadow: 0 0 30px rgba(12, 158, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 884px) {
+      .skills-section {
+        padding: 30px 5%;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Transition overlay – starts covering the page, then slides up to reveal -->
+  <div class="page-transition-overlay" id="pageOverlay"></div>
+
+  <nav>
+    <div class="nav_container">
+      <div class="logo">
+        <img src="logobig.png" class="logo_big" /><span>harnidhar</span>
+      </div>
+      <div class="links">
+        <div class="link"> -----------------------------------------------------------</div>
+        <div class="link"><a href="index.html" class="nav-link" data-target="index.html">Home</a></div>
+        <div class="link"><a href="skills.html" style="background: linear-gradient(270deg, rgb(12, 158, 255), rgb(255, 255, 255)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Skills</a></div>
+        <div class="link"><a href="mailto:tharnidhar19@gmail.com" target="_blank" rel="noopener noreferrer">Contact</a>
+        </div>
+      </div>
+    </div>
+    <i class="fa-solid fa-bars hamburg" onclick="hamburg()"></i>
+    <div class="dropdown">
+      <div class="links">
+        <a href="index.html" class="nav-link" data-target="index.html">Home</a>
+        <a href="skills.html" style="background: linear-gradient(270deg, rgb(12, 158, 255), rgb(255, 255, 255)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Skills</a>
+        <a href="mailto:tharnidhar19@gmail.com" target="_blank" rel="noopener noreferrer">Contact</a>
+        <i class="fa-solid fa-xmark cancel" onclick="cancel()"></i>
+      </div>
+    </div>
+  </nav>
+
+  <div class="skills-section" id="skillsSection">
+    <h2 class="section-title">My <span>Skills</span></h2>
+
+    <div class="skills-grid">
+      <!-- Programming Languages -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-code"></i></div>
+        <h3>Programming Languages</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">C</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">SQL</span>
+        </div>
+      </div>
+
+      <!-- Frontend -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-palette"></i></div>
+        <h3>Frontend</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML</span>
+          <span class="skill-tag">CSS</span>
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Angular</span>
+        </div>
+      </div>
+
+      <!-- Backend -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-server"></i></div>
+        <h3>Backend</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Spring Boot</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">JWT Authentication</span>
+        </div>
+      </div>
+
+      <!-- Mobile -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+        <h3>Mobile Development</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Android Studio</span>
+          <span class="skill-tag">AOSP</span>
+        </div>
+      </div>
+
+      <!-- DevOps & Cloud -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-cloud"></i></div>
+        <h3>DevOps & Cloud</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">AWS Cloud</span>
+          <span class="skill-tag">Git</span>
+        </div>
+      </div>
+
+      <!-- UI/UX & DB -->
+      <div class="skill-card">
+        <div class="card-icon"><i class="fa-solid fa-bezier-curve"></i></div>
+        <h3>UI/UX & Databases</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Figma</span>
+          <span class="skill-tag">Adobe Express</span>
+          <span class="skill-tag">Photoshop</span>
+          <span class="skill-tag">MySQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certifications -->
+  <div class="certifications-section" id="certsSection">
+    <h2 class="cert-title">Certifications & <span>Credentials</span></h2>
+    <div class="cert-list">
+      <div class="cert-item">
+        <i class="fa-brands fa-aws"></i>
+        <span class="cert-text"><strong>AWS Academy Graduate</strong> – AWS Cloud Foundations | Amazon Web Services</span>
+      </div>
+      <div class="cert-item">
+        <i class="fa-solid fa-network-wired"></i>
+        <span class="cert-text"><strong>CCNA: Introduction to Networks</strong> | Cisco Networking Academy</span>
+      </div>
+      <div class="cert-item">
+        <i class="fa-brands fa-js"></i>
+        <span class="cert-text"><strong>IT Specialist – JavaScript</strong> | Pearson VUE / Certiport</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-home">
+    <a href="index.html" class="nav-link" data-target="index.html">
+      <i class="fa-solid fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+
+  <script>
+    // ── Hamburger menu ──
+    function hamburg() {
+      const navbar = document.querySelector(".dropdown");
+      navbar.style.transform = "translateY(0px)";
+    }
+    function cancel() {
+      const navbar = document.querySelector(".dropdown");
+      navbar.style.transform = "translateY(-500px)";
+    }
+
+    // ── Page entrance reveal animation ──
+    window.addEventListener("DOMContentLoaded", () => {
+      const overlay = document.getElementById("pageOverlay");
+
+      // Small delay so browser renders the overlay first, then animate it away
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          overlay.classList.add("reveal");
+        });
+      });
+
+      // After overlay slides away, show the skills content
+      setTimeout(() => {
+        document.getElementById("skillsSection").classList.add("visible");
+      }, 300);
+
+      // Stagger skill card animations
+      const cards = document.querySelectorAll(".skill-card");
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add("visible");
+        }, 500 + index * 120);
+      });
+
+      // Certifications section
+      setTimeout(() => {
+        document.getElementById("certsSection").classList.add("visible");
+      }, 500 + cards.length * 120);
+
+      // Stagger cert items
+      const certItems = document.querySelectorAll(".cert-item");
+      certItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add("visible");
+        }, 700 + cards.length * 120 + index * 150);
+      });
+    });
+
+    // ── Exit animation (swipe down) when navigating away ──
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = this.getAttribute("data-target") || this.getAttribute("href");
+        const overlay = document.getElementById("pageOverlay");
+
+        // Reverse: slide overlay back down to cover page
+        overlay.style.transition = "transform 0.5s cubic-bezier(0.77, 0, 0.175, 1)";
+        overlay.classList.remove("reveal");
+
+        setTimeout(() => {
+          window.location.href = target;
+        }, 500);
+      });
+    });
+  </script>
+</body>
+
+</html>
